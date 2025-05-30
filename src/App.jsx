@@ -1,19 +1,26 @@
-import BlogPostList from './components/blogPostList';
+import React from 'react'
+import { Routes, Route } from 'react-router-dom'
+import BlogPostList from './components/blogPostList'
+import BlogPostDetail from './components/blogPostDetails';
 
-const samplePosts = [
+
+// Sample blog data (you can move this to a JSON file or API later)
+const posts = [
   {
     id: '1',
-    title: 'Getting Started with React',
-    summary: 'Learn the basics of React and build your first application.',
-    date: '2023-01-01',
-    url: '/posts/1',
+    title: 'Understanding React',
+    summary: 'An introduction to React concepts and architecture.',
+    content: '<p>This is the <strong>full content</strong> of Understanding React.</p>',
+    author: 'John Doe',
+    date: '2024-05-15'
   },
   {
     id: '2',
-    title: 'CSS Grid vs. Flexbox',
-    summary: 'A comparison of two powerful layout systems in CSS.',
-    date: '2023-02-15',
-    url: '/posts/2',
+    title: 'Advanced CSS Tips',
+    summary: 'Take your CSS skills to the next level with these tips.',
+    content: '<p>This is the <em>complete article</em> on advanced CSS.</p>',
+    author: 'Jane Smith',
+    date: '2024-05-20'
   },
   {
     id: '3',
@@ -24,15 +31,26 @@ const samplePosts = [
   },
 ];
 
-
 function App() {
   return (
     <div>
-      <h1>Blog Posts</h1>
-      <BlogPostList posts={samplePosts} />
+      <Routes>
+        <Route path="/" element={<BlogPostList posts={posts} />} />
+        <Route
+          path="/posts/:id"
+          element={<BlogPostDetailWrapper posts={posts} />}
+        />
+      </Routes>
     </div>
-  );
+  )
 }
 
-export default App;
+// A wrapper to find the post by ID from route params
+import { useParams } from 'react-router-dom'
+function BlogPostDetailWrapper({ posts }) {
+  const { id } = useParams()
+  const post = posts.find(p => p.id === id)
+  return post ? <BlogPostDetail post={post} /> : <p>Post not found.</p>
+}
 
+export default App
