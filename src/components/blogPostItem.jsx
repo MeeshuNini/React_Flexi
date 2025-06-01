@@ -1,19 +1,16 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
 import styles from './blogPostItem.module.css';
+import { Link } from 'react-router-dom';
 
-const BlogPostItem = ({ title, summary, date, url }) => {
-  const formattedDate = new Date(date).toLocaleDateString('en-US', {
-    month: 'long', day: 'numeric', year: 'numeric'
-  });
-
+export default function BlogPostItem({ post }) {
   return (
-    <div className={styles.blogPostItem}>
-      <Link to={url} className={styles.title}><h2>{title}</h2></Link>
-      <p className={styles.summary}>{summary}</p>
-      <p className={styles.date}>Published on {formattedDate}</p>
+    <div className={styles.card}>
+      <Link to={`/posts/${post.id}`} className={styles.link}>
+        <h2 className={styles.title}>{post.title}</h2>
+        <p className={styles.summary}>{post.summary}</p>
+        <div className={styles.meta}>
+          <span>{post.author}</span> | <span>{new Date(post.date).toDateString()}</span>
+        </div>
+      </Link>
     </div>
   );
-};
-
-export default BlogPostItem;
+}

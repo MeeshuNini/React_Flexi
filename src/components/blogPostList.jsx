@@ -1,19 +1,15 @@
-import React from 'react';
 import BlogPostItem from './blogPostItem';
 import styles from './blogPostList.module.css';
 
-const BlogPostList = ({ posts }) => {
-  if (!posts || posts.length === 0) {
-    return <p>No blog posts available.</p>;
-  }
+export default function BlogPostList({ posts }) {
+  if (!posts.length) return <p className={styles.empty}>No blog posts available.</p>;
 
   return (
-    <div className={styles.blogPostList}>
-      {posts.map((post) => (
-        <BlogPostItem key={post.id} {...post} />
+    <div className={styles.list}>
+      {posts.map(post => (
+        <BlogPostItem key={post.id} post={post} />
       ))}
     </div>
   );
-};
+}
 
-export default BlogPostList;
