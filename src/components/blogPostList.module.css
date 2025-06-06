@@ -1,13 +1,70 @@
-.list {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  padding: 1rem;
+/* components/BlogPostList.css */
+
+.post-list {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+  font-family: Arial, sans-serif;
 }
 
-.empty {
-  text-align: center;
-  color: #888;
-  font-size: 1.2rem;
-  margin-top: 2rem;
+.post-list h1 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  color: #333;
+}
+
+.new-post-button {
+  display: inline-block;
+  margin-bottom: 1.5rem;
+  padding: 0.5rem 1rem;
+  background-color: #007BFF;
+  color: white;
+  text-decoration: none;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.new-post-button:hover {
+  background-color: #0056b3;
+}
+
+.post-card {
+  border: 1px solid #ccc;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border-radius: 6px;
+  background-color: #fff;
+  transition: box-shadow 0.3s ease;
+}
+
+.post-card:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.post-card h2 {
+  margin: 0 0 0.5rem;
+  font-size: 1.5rem;
+  color: #333;
+}
+
+.post-card p {
+  margin: 0.25rem 0;
+  color: #555;
+}
+
+.meta {
+  font-size: 0.85rem;
+  color: #777;
+}
+
+.edit-link {
+  display: inline-block;
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+  color: #007BFF;
+  text-decoration: none;
+}
+
+.edit-link:hover {
+  text-decoration: underline;
 }
