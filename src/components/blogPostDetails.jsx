@@ -1,18 +1,22 @@
+import React from 'react';
+import { useParams } from 'react-router-dom';
 import styles from './blogPostDetail.module.css';
 
-export default function BlogPostDetail({ post }) {
-  if (!post) return <p className={styles.empty}>Post not found.</p>;
+
+
+function BlogPostDetail({ posts }) {
+  const { id } = useParams();
+  const post = posts.find(p => p.id === id);
+
+  if (!post) return <p>Post not found.</p>;
 
   return (
-    <article className={styles.container}>
-      <h1 className={styles.title}>{post.title}</h1>
-      <div className={styles.meta}>
-        By <strong>{post.author}</strong> on {new Date(post.date).toDateString()}
-      </div>
-      <div
-        className={styles.content}
-        dangerouslySetInnerHTML={{ __html: post.content }}
-      />
-    </article>
+    <div style={{ padding: '1rem' }}>
+      <h1>{post.title}</h1>
+      <p><em>{post.author} | {new Date(post.date).toDateString()}</em></p>
+      <div dangerouslySetInnerHTML={{ __html: post.content }} />
+    </div>
   );
 }
+
+export default BlogPostDetail;

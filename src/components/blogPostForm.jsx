@@ -1,91 +1,64 @@
 import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import styles from './blogPostForm.module.css';
 
-const BlogPostForm = ({ post, onSubmit }) => {
-  const [title, setTitle] = useState(post?.title || '');
-  const [content, setContent] = useState(post?.content || '');
-  const [author, setAuthor] = useState(post?.author || '');
-  const [date, setDate] = useState(post?.date || '');
-  const [errors, setErrors] = useState({});
-  const [isSubmitting, setIsSubmitting] = useState(false);
+function BlogPostForm({ posts = [], onSubmit }) {
+  const { id } = useParams();
+  const isEdit = Boolean(id);
+  const existingPost = posts.find(p => p.id === id);
+
+  const [formData, setFormData] = useState({
+    title: '',
+    summary: '',
+    content: '',
+    author: '',
+    date: '',
+  });
 
   useEffect(() => {
-    if (post) {
-      setTitle(post.title);
-      setContent(post.content);
-      setAuthor(post.author);
-      setDate(post.date);
+    if (isEdit && existingPost) {
+      setFormData(existingPost);
     }
-  }, [post]);
+  }, [id]);
 
-  const handleSubmit = async (e) => {
+  const handleChange = e => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = e => {
     e.preventDefault();
-    const newErrors = {};
-    if (!title) newErrors.title = 'Required';
-    if (!content) newErrors.content = 'Required';
-    if (!author) newErrors.author = 'Required';
-    if (!date) newErrors.date = 'Required';
-
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
-    } else {
-      setErrors({});
-      setIsSubmitting(true);
-      await onSubmit({ title, content, author, date });
-      setIsSubmitting(false);
-    }
+    const payload = isEdit ? { ...formData, id } : formData;
+    onSubmit(payload);
   };
 
   return (
-    <form className={styles.blogPostForm} onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className={styles.blogPostForm}>
       <div className={styles.formGroup}>
-        <label htmlFor="title">Title</label>
-        <input
-          id="title"
-          type="text"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-        />
-        {errors.title && <p className={styles.error}>{errors.title}</p>}
+        <label>Title</label>
+        <input name="title" value={formData.title} onChange={handleChange} required />
       </div>
-
       <div className={styles.formGroup}>
-        <label htmlFor="content">Content</label>
-        <textarea
-          id="content"
-          value={content}
-          onChange={(e) => setContent(e.target.value)}
-        />
-        {errors.content && <p className={styles.error}>{errors.content}</p>}
+        <label>Summary</label>
+        <input name="summary" value={formData.summary} onChange={handleChange} required />
       </div>
-
       <div className={styles.formGroup}>
-        <label htmlFor="author">Author</label>
-        <input
-          id="author"
-          type="text"
-          value={author}
-          onChange={(e) => setAuthor(e.target.value)}
-        />
-        {errors.author && <p className={styles.error}>{errors.author}</p>}
+        <label>Content (HTML)</label>
+        <textarea name="content" value={formData.content} onChange={handleChange} required />
       </div>
-
       <div className={styles.formGroup}>
-        <label htmlFor="date">Publication Date</label>
-        <input
-          id="date"
-          type="date"
-          value={date}
-          onChange={(e) => setDate(e.target.value)}
-        />
-        {errors.date && <p className={styles.error}>{errors.date}</p>}
+        <label>Author</label>
+        <input name="author" value={formData.author} onChange={handleChange} required />
       </div>
-
-      <button type="submit" disabled={isSubmitting}>
-        {isSubmitting ? 'Submitting...' : 'Submit'}
-      </button>
+      <div className={styles.formGroup}>
+        <label>Date</label>
+        <input type="date" name="date" value={formData.date} onChange={handleChange} required />
+      </div>
+      <div className={styles.buttonGroup}>
+        <button type="submit">{isEdit ? 'Update' : 'Create'} Post</button>
+      </div>
     </form>
   );
-};
+}
 
 export default BlogPostForm;

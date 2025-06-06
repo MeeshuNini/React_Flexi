@@ -1,15 +1,22 @@
-import BlogPostItem from './blogPostItem';
-import styles from './blogPostList.module.css';
+import React from 'react';
+import { Link } from 'react-router-dom';
+import './blogPostList.module.css';
 
-export default function BlogPostList({ posts }) {
-  if (!posts.length) return <p className={styles.empty}>No blog posts available.</p>;
-
+function BlogPostList({ posts }) {
   return (
-    <div className={styles.list}>
+    <div className="post-list">
+      <h1>Blog Posts</h1>
+      <Link to="/new" className="new-post-button">New Post</Link>
       {posts.map(post => (
-        <BlogPostItem key={post.id} post={post} />
+        <div className="post-card" key={post.id}>
+          <Link to={`/posts/${post.id}`}><h2>{post.title}</h2></Link>
+          <p>{post.summary}</p>
+          <p className="meta">{post.author} | {new Date(post.date).toDateString()}</p>
+          <Link to={`/edit/${post.id}`} className="edit-link">Edit</Link>
+        </div>
       ))}
     </div>
   );
 }
 
+export default BlogPostList;

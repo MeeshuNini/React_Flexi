@@ -1,11 +1,11 @@
-import React from 'react'
-import { Routes, Route, useParams } from 'react-router-dom'
-import BlogPostList from './components/blogPostList'
-import BlogPostDetail from './components/blogPostDetails'
-import BlogPostForm from './components/blogPostForm'
+// App.jsx
+import React, { useState } from 'react';
+import { Routes, Route, useNavigate } from 'react-router-dom';
+import BlogPostList from './components/blogPostList';
+import BlogPostDetail from './components/blogPostDetails';
+import BlogPostForm from './components/blogPostForm';
 
-// Sample blog data
-const posts = [
+const initialPosts = [
   {
     id: '1',
     title: 'Understanding React',
@@ -26,41 +26,34 @@ const posts = [
     id: '3',
     title: 'Accessibility in Web Development',
     summary: 'Tips for making your web applications more accessible.',
-    content: '<p>Accessibility is key to a great user experience.</p>',
-    author: 'Alex Kim',
+    content: '<p>Make your apps accessible for all users.</p>',
+    author: 'Alex Roe',
     date: '2023-03-10'
-  }
-]
+  },
+];
 
 function App() {
+  const [posts, setPosts] = useState(initialPosts);
+  const navigate = useNavigate();
+
+  const addPost = (newPost) => {
+    setPosts([...posts, { ...newPost, id: Date.now().toString() }]);
+    navigate('/');
+  };
+
+  const updatePost = (updatedPost) => {
+    setPosts(posts.map(p => p.id === updatedPost.id ? updatedPost : p));
+    navigate('/');
+  };
+
   return (
-    <div>
-      <Routes>
-        <Route path="/" element={<BlogPostList posts={posts} />} />
-        <Route path="/posts/:id" element={<BlogPostDetailWrapper posts={posts} />} />
-        <Route path="/create" element={<BlogPostForm onSubmit={(data) => console.log('Created:', data)} />} />
-        <Route path="/edit/:id" element={<EditPostWrapper posts={posts} />} />
-      </Routes>
-    </div>
-  )
+    <Routes>
+      <Route path="/" element={<BlogPostList posts={posts} />} />
+      <Route path="/posts/:id" element={<BlogPostDetail posts={posts} />} />
+      <Route path="/new" element={<BlogPostForm onSubmit={addPost} />} />
+      <Route path="/edit/:id" element={<BlogPostForm posts={posts} onSubmit={updatePost} />} />
+    </Routes>
+  );
 }
 
-// Wrapper to find post by ID for detail view
-function BlogPostDetailWrapper({ posts }) {
-  const { id } = useParams()
-  const post = posts.find(p => p.id === id)
-  return post ? <BlogPostDetail post={post} /> : <p>Post not found.</p>
-}
-
-// Wrapper to find post by ID for editing
-function EditPostWrapper({ posts }) {
-  const { id } = useParams()
-  const post = posts.find(p => p.id === id)
-  return post ? (
-    <BlogPostForm post={post} onSubmit={(data) => console.log('Edited:', data)} />
-  ) : (
-    <p>Post not found.</p>
-  )
-}
-
-export default App
+export default App;
