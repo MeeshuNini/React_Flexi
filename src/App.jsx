@@ -1,10 +1,10 @@
 import React from 'react'
-import { Routes, Route } from 'react-router-dom'
+import { Routes, Route, useParams } from 'react-router-dom'
 import BlogPostList from './components/blogPostList'
-import BlogPostDetail from './components/blogPostDetails';
+import BlogPostDetail from './components/blogPostDetails'
+import BlogPostForm from './components/blogPostForm'
 
-
-// Sample blog data (you can move this to a JSON file or API later)
+// Sample blog data
 const posts = [
   {
     id: '1',
@@ -26,31 +26,41 @@ const posts = [
     id: '3',
     title: 'Accessibility in Web Development',
     summary: 'Tips for making your web applications more accessible.',
-    date: '2023-03-10',
-    url: '/posts/3',
-  },
-];
+    content: '<p>Accessibility is key to a great user experience.</p>',
+    author: 'Alex Kim',
+    date: '2023-03-10'
+  }
+]
 
 function App() {
   return (
     <div>
       <Routes>
         <Route path="/" element={<BlogPostList posts={posts} />} />
-        <Route
-          path="/posts/:id"
-          element={<BlogPostDetailWrapper posts={posts} />}
-        />
+        <Route path="/posts/:id" element={<BlogPostDetailWrapper posts={posts} />} />
+        <Route path="/create" element={<BlogPostForm onSubmit={(data) => console.log('Created:', data)} />} />
+        <Route path="/edit/:id" element={<EditPostWrapper posts={posts} />} />
       </Routes>
     </div>
   )
 }
 
-// A wrapper to find the post by ID from route params
-import { useParams } from 'react-router-dom'
+// Wrapper to find post by ID for detail view
 function BlogPostDetailWrapper({ posts }) {
   const { id } = useParams()
   const post = posts.find(p => p.id === id)
   return post ? <BlogPostDetail post={post} /> : <p>Post not found.</p>
+}
+
+// Wrapper to find post by ID for editing
+function EditPostWrapper({ posts }) {
+  const { id } = useParams()
+  const post = posts.find(p => p.id === id)
+  return post ? (
+    <BlogPostForm post={post} onSubmit={(data) => console.log('Edited:', data)} />
+  ) : (
+    <p>Post not found.</p>
+  )
 }
 
 export default App

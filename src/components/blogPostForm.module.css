@@ -1,0 +1,102 @@
+/* BlogPostForm.module.css */
+
+.blogPostForm {
+  max-width: 800px;
+  margin: 0 auto;
+  font-family: Arial, sans-serif;
+  padding: 1rem;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1.5rem;
+}
+
+label {
+  font-size: 16px;
+  color: #333;
+  margin-bottom: 0.5rem;
+}
+
+input,
+textarea {
+  font-size: 16px;
+  color: #333;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 0.5rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+input:focus,
+textarea:focus {
+  outline: 2px solid #007BFF;
+}
+
+.error {
+  color: #FF0000;
+  font-size: 14px;
+  margin-top: 0.25rem;
+}
+
+.buttonGroup {
+  display: flex;
+  justify-content: flex-end;
+}
+
+button {
+  padding: 0.5rem 1rem;
+  background-color: #007BFF;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+/* Responsive styles */
+@media screen and (min-width: 1200px) {
+  .formGroup {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  label {
+    width: 200px;
+    text-align: right;
+    margin-right: 10px;
+  }
+
+  input,
+  textarea {
+    flex: 1;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  label {
+    font-size: 14px;
+  }
+
+  input,
+  textarea {
+    font-size: 14px;
+  }
+
+  .error {
+    font-size: 12px;
+  }
+
+  button {
+    width: 100%;
+    margin-top: 1rem;
+  }
+}
