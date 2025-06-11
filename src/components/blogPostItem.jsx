@@ -1,16 +1,31 @@
-import styles from './blogPostItem.module.css';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import styles from './blogPostItem.module.css';
+import DeleteButton from './deleteButton';
+import ConfirmationDialog from './confirmationDialog';
 
-export default function BlogPostItem({ post }) {
+const BlogPostItem = ({ post, onDelete }) => {
+  const [isDialogOpen, setDialogOpen] = useState(false);
+
+  const handleDelete = () => {
+    setDialogOpen(false);
+    onDelete(post.id);
+  };
+
   return (
-    <div className={styles.card}>
-      <Link to={`/posts/${post.id}`} className={styles.link}>
-        <h2 className={styles.title}>{post.title}</h2>
-        <p className={styles.summary}>{post.summary}</p>
-        <div className={styles.meta}>
-          <span>{post.author}</span> | <span>{new Date(post.date).toDateString()}</span>
-        </div>
-      </Link>
+    <div className={styles.item}>
+      <h3 className={styles.title}>{post.title}</h3>
+      <p className={styles.meta}>By {post.author} on {post.date}</p>
+      <Link className={styles.edit} to={`/edit/${post.id}`}>Edit</Link>
+      <DeleteButton onClick={() => setDialogOpen(true)} />
+
+      <ConfirmationDialog
+        isOpen={isDialogOpen}
+        onClose={() => setDialogOpen(false)}
+        onConfirm={handleDelete}
+      />
     </div>
   );
-}
+};
+
+export default BlogPostItem;

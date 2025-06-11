@@ -1,22 +1,34 @@
-import React from 'react';
-import { useParams } from 'react-router-dom';
+import React, { useState } from 'react';
 import styles from './blogPostDetail.module.css';
+import DeleteButton from './deleteButton';
+import ConfirmationDialog from './confirmationDialog';
 
+const BlogPostDetails = ({ post, onDelete }) => {
+  const [isDialogOpen, setDialogOpen] = useState(false);
 
-
-function BlogPostDetail({ posts }) {
-  const { id } = useParams();
-  const post = posts.find(p => p.id === id);
-
-  if (!post) return <p>Post not found.</p>;
+  const handleDelete = () => {
+    setDialogOpen(false);
+    onDelete(post.id);
+  };
 
   return (
-    <div style={{ padding: '1rem' }}>
-      <h1>{post.title}</h1>
-      <p><em>{post.author} | {new Date(post.date).toDateString()}</em></p>
-      <div dangerouslySetInnerHTML={{ __html: post.content }} />
+    <div className={styles.container}>
+      <h1 className={styles.title}>{post.title}</h1>
+      <p className={styles.meta}>By {post.author} on {post.date}</p>
+      <div
+        className={styles.content}
+        dangerouslySetInnerHTML={{ __html: post.content }}
+      />
+
+      <DeleteButton onClick={() => setDialogOpen(true)} />
+
+      <ConfirmationDialog
+        isOpen={isDialogOpen}
+        onClose={() => setDialogOpen(false)}
+        onConfirm={handleDelete}
+      />
     </div>
   );
-}
+};
 
-export default BlogPostDetail;
+export default BlogPostDetails;
