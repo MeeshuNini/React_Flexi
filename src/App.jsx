@@ -1,58 +1,74 @@
-// App.jsx
 import React, { useState } from 'react';
-import { Routes, Route, useNavigate } from 'react-router-dom';
+import { Routes, Route, Link, useNavigate } from 'react-router-dom';
 import BlogPostList from './components/blogPostList';
 import BlogPostDetail from './components/blogPostDetails';
 import BlogPostForm from './components/blogPostForm';
-
-const initialPosts = [
-  {
-    id: '1',
-    title: 'Understanding React',
-    summary: 'An introduction to React concepts and architecture.',
-    content: '<p>This is the <strong>full content</strong> of Understanding React.</p>',
-    author: 'John Doe',
-    date: '2024-05-15'
-  },
-  {
-    id: '2',
-    title: 'Advanced CSS Tips',
-    summary: 'Take your CSS skills to the next level with these tips.',
-    content: '<p>This is the <em>complete article</em> on advanced CSS.</p>',
-    author: 'Jane Smith',
-    date: '2024-05-20'
-  },
-  {
-    id: '3',
-    title: 'Accessibility in Web Development',
-    summary: 'Tips for making your web applications more accessible.',
-    content: '<p>Make your apps accessible for all users.</p>',
-    author: 'Alex Roe',
-    date: '2023-03-10'
-  },
-];
+import './App.css';
 
 function App() {
-  const [posts, setPosts] = useState(initialPosts);
   const navigate = useNavigate();
 
-  const addPost = (newPost) => {
-    setPosts([...posts, { ...newPost, id: Date.now().toString() }]);
-    navigate('/');
+  const [posts, setPosts] = useState([
+    {
+      id: '1',
+      title: 'Understanding React',
+      summary: 'An introduction to React concepts and architecture.',
+      content: '<p>This is the <strong>full content</strong> of Understanding React.</p>',
+      author: 'John Doe',
+      date: '2024-05-15'
+    },
+    {
+      id: '2',
+      title: 'Advanced CSS Tips',
+      summary: 'Take your CSS skills to the next level with these tips.',
+      content: '<p>This is the <em>complete article</em> on advanced CSS.</p>',
+      author: 'Jane Smith',
+      date: '2024-05-20'
+    },
+    {
+      id: '3',
+      title: 'Accessibility in Web Development',
+      summary: 'Tips for making your web applications more accessible.',
+      content: '<p>Make your apps accessible for all users.</p>',
+      author: 'Alex Roe',
+      date: '2023-03-10'
+    }
+  ]);
+
+  const handleDelete = (postId) => {
+    setPosts(prev => prev.filter(post => post.id !== postId));
   };
 
-  const updatePost = (updatedPost) => {
-    setPosts(posts.map(p => p.id === updatedPost.id ? updatedPost : p));
+  const handleCreateOrUpdate = (newPost) => {
+    setPosts(prev => {
+      const exists = prev.some(post => post.id === newPost.id);
+      if (exists) {
+        return prev.map(post => (post.id === newPost.id ? newPost : post));
+      } else {
+        return [...prev, { ...newPost, id: Date.now().toString() }];
+      }
+    });
     navigate('/');
   };
 
   return (
-    <Routes>
-      <Route path="/" element={<BlogPostList posts={posts} />} />
-      <Route path="/posts/:id" element={<BlogPostDetail posts={posts} />} />
-      <Route path="/new" element={<BlogPostForm onSubmit={addPost} />} />
-      <Route path="/edit/:id" element={<BlogPostForm posts={posts} onSubmit={updatePost} />} />
-    </Routes>
+    <div className="app-container">
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <>
+              <h1>Blog Posts</h1>
+              <Link to="/new" className="new-post-button">Create New Post</Link>
+              <BlogPostList posts={posts} onDelete={handleDelete} />
+            </>
+          }
+        />
+        <Route path="/post/:id" element={<BlogPostDetail posts={posts} onDelete={handleDelete} />} />
+        <Route path="/edit/:id" element={<BlogPostForm posts={posts} onSubmit={handleCreateOrUpdate} />} />
+        <Route path="/new" element={<BlogPostForm posts={[]} onSubmit={handleCreateOrUpdate} />} />
+      </Routes>
+    </div>
   );
 }
 

@@ -68,3 +68,16 @@
 .edit-link:hover {
   text-decoration: underline;
 }
+
+.post-list {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 1rem;
+  font-family: Arial, sans-serif;
+}
+
+@media screen and (max-width: 768px) {
+  .post-list {
+    padding: 0.5rem;
+  }
+}
