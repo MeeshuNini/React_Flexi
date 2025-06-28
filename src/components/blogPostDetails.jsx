@@ -2,9 +2,16 @@ import React, { useState } from 'react';
 import styles from './blogPostDetail.module.css';
 import DeleteButton from './deleteButton';
 import ConfirmationDialog from './confirmationDialog';
-
+import CommentList from './commentList';
+import CommentForm from './commentForm';
 const BlogPostDetails = ({ post, onDelete }) => {
   const [isDialogOpen, setDialogOpen] = useState(false);
+  const [comments, setComments] = useState([]);
+
+
+  const handleNewComment = (newComment) => {
+    setComments(prev => [...prev, newComment]);
+  };
 
   const handleDelete = () => {
     setDialogOpen(false);
@@ -27,6 +34,8 @@ const BlogPostDetails = ({ post, onDelete }) => {
         onClose={() => setDialogOpen(false)}
         onConfirm={handleDelete}
       />
+      <CommentList comments={comments} />
+      <CommentForm onSubmit={handleNewComment} isLoggedIn={false} />
     </div>
   );
 };

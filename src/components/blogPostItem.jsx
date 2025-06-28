@@ -13,8 +13,10 @@ const BlogPostItem = ({ post, onDelete }) => {
   };
 
   return (
-    <div className={styles.item}>
-      <h3 className={styles.title}>{post.title}</h3>
+    <div className={styles.item} id = {post.id}>
+      <Link to={post.url} className={styles.title}>
+        <h3>{post.title}</h3>
+      </Link>
       <p className={styles.meta}>By {post.author} on {post.date}</p>
       <Link className={styles.edit} to={`/edit/${post.id}`}>Edit</Link>
       <DeleteButton onClick={() => setDialogOpen(true)} />
