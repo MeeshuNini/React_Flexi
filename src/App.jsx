@@ -1,13 +1,12 @@
+// App.jsx
 import React, { useState } from 'react';
-import { Routes, Route, Link, useNavigate } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import BlogPostList from './components/blogPostList';
-import BlogPostDetail from './components/blogPostDetails';
+import BlogPostDetails from './components/blogPostDetails';
 import BlogPostForm from './components/blogPostForm';
-import './App.css';
+import Layout from './components/layout';
 
 function App() {
-  const navigate = useNavigate();
-
   const [posts, setPosts] = useState([
     {
       id: '1',
@@ -36,39 +35,29 @@ function App() {
   ]);
 
   const handleDelete = (postId) => {
+    alert(`Post with ID ${postId} has been deleted.`);
     setPosts(prev => prev.filter(post => post.id !== postId));
   };
 
-  const handleCreateOrUpdate = (newPost) => {
-    setPosts(prev => {
-      const exists = prev.some(post => post.id === newPost.id);
-      if (exists) {
-        return prev.map(post => (post.id === newPost.id ? newPost : post));
-      } else {
-        return [...prev, { ...newPost, id: Date.now().toString() }];
-      }
-    });
-    navigate('/');
+  const handleSubmit = (newPost) => {
+    setPosts(prev =>
+      prev.some(p => p.id === newPost.id)
+        ? prev.map(p => (p.id === newPost.id ? newPost : p))
+        : [...prev, { ...newPost, id: Date.now().toString() }]
+    );
   };
 
   return (
-    <div className="app-container">
+    <Layout>
       <Routes>
-        <Route
-          path="/"
-          element={
-            <>
-              <h1>Blog Posts</h1>
-              <Link to="/new" className="new-post-button">Create New Post</Link>
-              <BlogPostList posts={posts} onDelete={handleDelete} />
-            </>
-          }
-        />
-        <Route path="/post/:id" element={<BlogPostDetail posts={posts} onDelete={handleDelete} />} />
-        <Route path="/edit/:id" element={<BlogPostForm posts={posts} onSubmit={handleCreateOrUpdate} />} />
-        <Route path="/new" element={<BlogPostForm posts={[]} onSubmit={handleCreateOrUpdate} />} />
+        <Route path="/" element={<BlogPostList posts={posts} onDelete={handleDelete} />} />
+        <Route path="/blog" element={<BlogPostList posts={posts} onDelete={handleDelete} />} />
+        <Route path="/post/:id" element={<BlogPostDetails post={posts[0]} onDelete={handleDelete} />} />
+        <Route path="/new" element={<BlogPostForm onSubmit={handleSubmit} posts={posts} />} />
+        <Route path="/edit/:id" element={<BlogPostForm onSubmit={handleSubmit} posts={posts} />} />
+        <Route path="/about" element={<div><h2>About This Blog</h2><p>This is a demo blog application built with React.</p></div>} />
       </Routes>
-    </div>
+    </Layout>
   );
 }
 
