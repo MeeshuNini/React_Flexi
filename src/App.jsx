@@ -1,6 +1,6 @@
 // App.jsx
 import React, { useState } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, useParams } from 'react-router-dom';
 import BlogPostList from './components/blogPostList';
 import BlogPostDetails from './components/blogPostDetails';
 import BlogPostForm from './components/blogPostForm';
@@ -47,15 +47,49 @@ function App() {
     );
   };
 
+  const BlogPostView = () => {
+    const { id } = useParams();
+    const post = posts.find(p => p.id === id);
+    return post ? (
+      <BlogPostDetails post={post} onDelete={handleDelete} />
+    ) : (
+      <div style={{ padding: '2rem' }}>
+        <h2>Post not found</h2>
+      </div>
+    );
+  };
+
   return (
     <Layout>
       <Routes>
-        <Route path="/" element={<BlogPostList posts={posts} onDelete={handleDelete} />} />
-        <Route path="/blog" element={<BlogPostList posts={posts} onDelete={handleDelete} />} />
-        <Route path="/post/:id" element={<BlogPostDetails post={posts[0]} onDelete={handleDelete} />} />
+        <Route
+          path="/"
+          element={
+            <BlogPostList
+              posts={posts.map((post) => ({
+                ...post,
+                url: `/posts/${post.id}`,
+              }))}
+              onDelete={handleDelete}
+            />
+          }
+        />
+        <Route
+          path="/blog"
+          element={<BlogPostList posts={posts} onDelete={handleDelete} />}
+        />
+        <Route path="/posts/:id" element={<BlogPostView />} />
         <Route path="/new" element={<BlogPostForm onSubmit={handleSubmit} posts={posts} />} />
         <Route path="/edit/:id" element={<BlogPostForm onSubmit={handleSubmit} posts={posts} />} />
-        <Route path="/about" element={<div><h2>About This Blog</h2><p>This is a demo blog application built with React.</p></div>} />
+        <Route
+          path="/about"
+          element={
+            <div style={{ padding: '2rem' }}>
+              <h2>About This Blog</h2>
+              <p>This is a demo blog application built with React.</p>
+            </div>
+          }
+        />
       </Routes>
     </Layout>
   );
