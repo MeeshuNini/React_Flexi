@@ -1,13 +1,13 @@
-// components/Layout.jsx
+// components/layout.jsx
 import React from 'react';
 import NavBar from './navBar';
 import styles from './Layout.module.css';
 
-const Layout = ({ children }) => {
+const Layout = ({ children, onSearch }) => {
   return (
     <div className={styles.layout}>
       <header className={styles.header}>
-        <NavBar />
+        <NavBar onSearch={onSearch} />
       </header>
       <main className={styles.main}>{children}</main>
       <footer className={styles.footer}>

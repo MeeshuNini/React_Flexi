@@ -7,6 +7,7 @@ import BlogPostForm from './components/blogPostForm';
 import Layout from './components/layout';
 
 function App() {
+  const [searchQuery, setSearchQuery] = useState('');
   const [posts, setPosts] = useState([
     {
       id: '1',
@@ -47,6 +48,11 @@ function App() {
     );
   };
 
+  const filteredPosts = posts.filter(post =>
+    post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    post.content.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   const BlogPostView = () => {
     const { id } = useParams();
     const post = posts.find(p => p.id === id);
@@ -60,8 +66,20 @@ function App() {
   };
 
   return (
-    <Layout>
+    <Layout onSearch={setSearchQuery}>
       <Routes>
+        <Route
+          path="/"
+          element={
+            <BlogPostList
+              posts={filteredPosts.map((post) => ({
+                ...post,
+                url: `/posts/${post.id}`,
+              }))}
+              onDelete={handleDelete}
+            />
+          }
+        />
         <Route
           path="/"
           element={

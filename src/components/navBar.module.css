@@ -76,3 +76,13 @@
     border-bottom: 1px solid #ccc;
   }
 }
+
+.desktopSearch {
+  margin-left: auto;
+}
+
+@media (max-width: 768px) {
+  .desktopSearch {
+    display: none;
+  }
+}
